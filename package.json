@@ -1,0 +1,16 @@
+{
+  "name": "d3",
+  "version": "1.0.0",
+  "description": "d3 test",
+  "keywords": [],
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Belibov",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.2",
+    "gulp": "^3.9.1"
+  }
+}

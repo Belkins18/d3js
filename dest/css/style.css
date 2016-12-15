@@ -1,0 +1,33 @@
+*{
+    background: rgba(0, 0, 0, 0.04);
+}
+
+
+header, main, .footer{
+    position: relative;
+    margin: 50px auto;
+}
+
+svg{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.axis path {
+    fill: none;
+    stroke: grey;
+    shape-rendering: crispEdges;
+}
+.axis text {
+}
+.tick line {
+    stroke: grey;
+    shape-rendering: crispEdges;
+}
+
+.axis .grid {
+    stroke: grey;
+    shape-rendering: crispEdges;
+}

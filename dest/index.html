@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>d3</title>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <style>
+            .flex {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+            }
+        </style>
+        <script>
+            var chart_area = d3
+                .select("body")   // Выборка состоит из элемента <body>
+                .append('div')    // Выборка состоит из вновь созданного элемента <div>
+                .classed('chart_area', true) // Задаем класс выбранному элементу <div class='chart_area'></div>
+            ;
+            var hAxis_area = d3
+                .select("body")
+                .append('div')
+                //.classed('haxis_area', true)
+                .style('position', 'absolute');
+
+
+            var RANDOM_MIN = 0, RANDOM_MAX = 100;
+            var CHART_WIDTH = 500,
+                CHART_HEIGHT = 300;
+            // Функция генерации случайного целого числа в диапaзоне [lo..up]
+            function irand(lo, up) {
+                return Math.floor(Math.random()*(up-lo+1)+lo);
+            }
+            // Массив случайных чисел
+            var data = [];
+            for (var i = 0; i < 10; i++) {
+                data.push(irand(RANDOM_MIN, RANDOM_MAX));
+            }
+
+            var widthScale = d3.scale.linear()
+            // Объявляем исходный диапазон
+                    .domain([
+                        // Определяем минимальное...
+                        d3.min(data, function(d, i) {``
+                            return d;
+                        }),
+                        // ...и максимальное знaчения массива данных
+                        d3.max(data, function(d, i) {
+                            return d;
+                        })
+                    ])
+                    // Результирующий диапазон — от нуля до ширины диаграммы
+                    .range([0, CHART_WIDTH])
+                    // Начало и конeц диапазона — «красивые» значения
+                    .nice();
+
+            var ticks = widthScale.ticks(10);
+
+
+            chart_area
+                    .selectAll('div')
+                    .data(data)
+                    .enter()
+                    .append('div')
+                    .classed('bar_area', true)
+
+                    .style('background-color', function(d, i) {
+                        return 'hsl(80,50%,'+(100-d/2)+'%)';
+                    })
+                    .style('height', '20px')
+                    .style('margin', '2px 0px')
+
+                     //animation
+                    .style('width', 0) // Исходная ширина элемента до начала анимации
+                    .transition()
+                    .duration(750)     // Продолжительность анимации в миллисекундах
+
+                    // Задаем стиль width='<d>px', где d — значение элемента массива
+                    // .style('width', function(d,i) { return d + 'px'; } )
+                    .style('width', function(d,i) { return widthScale(d) + 'px'; } )
+                    // Задаем строковое значение равным значению элeмента массива
+                    .text(String);
+
+            hAxis_area
+                    .selectAll('span')
+                    .data(ticks)
+                    .enter()
+                    .append('span')
+                    .style('position', 'absolute')
+                    .style('left', function(d,i) { return widthScale(d) + 'px'; } )
+                    .text(String)
+            ;
+        </script>
+    </body>
+</html>
