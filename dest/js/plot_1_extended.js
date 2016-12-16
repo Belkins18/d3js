@@ -91,7 +91,7 @@ var svg = d3.select("#chart")
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("class", "chart__cnt")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
 // Для работы с .csv
@@ -99,80 +99,62 @@ var svg = d3.select("#chart")
     d3.csv(path, function(){}, function(){})
 */
 d3.csv(
-    'http://d3-js.ru/data/gapminder.csv',
-    //обрабатывает каждый полученный обьект и возвращает результат обработки
+    'http://d3-js.ru/data/gapminder-extended.csv',
     function (country){
-        /*
-            переведем числовые данные в числа а не строки
-        */
         country.gdp = Number(country.gdp);
+        country.kids = Number(country.kids);
         country.life = Number(country.life);
+        country.median_age = Number(country.median_age);
         country.population = Number(country.population);
         return country;
     },
-    // сюда передается Array щбработанных объектов,
-    // тут визуализируем и обрабатываем данные
     function (countries){
         console.log(countries);
-
-        // Итак, для связи данных и систем координат нам необходимы Шкалы
-        // Используем Линейную шкалу
-
-        // для оси Х
         var x = d3.scale.linear()
             .domain([0 , d3.max(countries, function (d) {
-                return d.gdp;
-            })]) // для отображения ВВП старны gdp
+                return d.kids;
+            })])
             .range([0, width]);
-        // для оси Y
         var y = d3.scale.linear()
             .domain(d3.extent(countries, function (d) { return d.life })) //мин и макс продолжительности жизни
             .range([(height - 10) , 0]);
-        // radius
         var r = d3.scale.linear()
             .domain([0, Math.sqrt(d3.max(countries, function (d) { return d.population }))]) //мин и макс продолжительности жизни
-            .range([0, 20]);
+            .range([0, 15]);
 
 
-        //После задания шкал отрисуем круги
         var g = svg.selectAll('g.point')
             .data(countries)
             .enter()
             .append('g')
             .attr('class', 'point');
-
         g.append('circle')
             .attr('class', 'point__circle')
             .attr('fill', function (d){ return d.color; })
-            .attr('cx', '0').transition().duration(500)
 
-            .attr('cx', function (d){ return x(d.gdp); })
+            .attr('cx', function (d){ return x(d.kids); })
+            .attr('cy', height).transition().duration(500)
             .attr('cy', function (d){ return y(d.life); })
             .attr('r', function (d){ return r(Math.sqrt(d.population)); })
 
             .attr('data-country', function (d) { return d.country });
-
         g.append('text')
             .attr('class', 'point__text')
             .text(function (d) { return d.country })
-            .attr('x', function (d){ return x(d.gdp) + r(Math.sqrt(d.population)); })
+            .attr('x', function (d){ return x(d.kids) + r(Math.sqrt(d.population)); })
             .attr('y', function (d){ return y(d.life); })
 
             .attr('dx', 4)
             .attr('dy', 4);
 
-        //Для отрисовки осей координат:
-        // d3.svg.axis()
-        //     .scale()
-        //     .orient();
 
-        //Оси должны быть каждая в своей группе, поэтому создадим для осей группу
+
         var axis = svg.append('g')
             .attr('class', 'axis');
 
         axis.append('g')
             .attr('class', 'axis__x')
-            .attr('transform', 'translate(0,' + ( height + 10) +')')
+            .attr('transform', 'translate(0,' + ( height + 5) +')')
             .call(
                 d3.svg.axis()
                     .scale(x)
