@@ -1,0 +1,20 @@
+main{
+    margin: 50px auto;
+}
+
+.chart{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+text{
+    font-size: 10px;
+    font-family: monospace;
+}
+
+path, line{
+    fill: none;
+    stroke: #ccc;
+    shape-rendering: crispEdges;
+}
