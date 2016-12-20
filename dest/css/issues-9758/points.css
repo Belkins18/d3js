@@ -1,0 +1,81 @@
+svg{
+    background: #2062f2;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: transparent;;
+}
+.axis .grid-line {
+    stroke: #3872f2;
+    shape-rendering: crispedges;
+    /*stroke-opacity: 0.2;*/
+}
+.axis text {
+    font: 10px Arial;
+    fill: #fff;
+    fill-opacity: 0.5;
+}
+
+.tooltip{
+    opacity: 0;
+    width: auto;
+    height: 36px;
+    padding: 0 5px 0 5px;
+    max-width: 70px;
+    top: 0;
+    left: 0;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    /*transition: 0.1s ease all;*/
+}
+.tooltip:before{
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    content: '';
+    width: 0px;
+    height: 0px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(0, 0, 0, 0.4);
+    transform: translateX(-50%);
+}
+.tooltip__text{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ffffff;
+    font: 14px Arial;
+    line-height: 36px;
+
+}
+
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
