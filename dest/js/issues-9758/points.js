@@ -1,9 +1,9 @@
 // Система отступов для d3
 var margin = {top: 50, right: 30, bottom: 30, left: 30};
-// var width = 320 - margin.left - margin.right;
-// var height = 300 - margin.top - margin.bottom;
-var width = 800 - margin.left - margin.right;
-var height = 700 - margin.top - margin.bottom;
+var width = 320 - margin.left - margin.right;
+var height = 300 - margin.top - margin.bottom;
+// var width = 800 - margin.left - margin.right;
+// var height = 700 - margin.top - margin.bottom;
 
 
 var svg_wraper = d3.select(".chart-wrapper")
@@ -19,7 +19,7 @@ var svg = d3.select("#chart")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.csv(
-    'http://d3-js.ru/data/gapminder-extended.csv',
+    '../data/gapminder-extended.csv',
     function (country){
         country.gdp = Number(country.gdp);
         country.kids = Number(country.kids);
@@ -32,15 +32,24 @@ d3.csv(
         console.log(countries);
         var x = d3.scale.linear()
             .domain([0 , d3.max(countries, function (d) {
+                console.log('(d.kids) = '+(d.kids))
                 return d.kids;
             })])
             .range([0, width]);
         var y = d3.scale.linear()
-            .domain(d3.extent(countries, function (d) { return d.life })) //мин и макс продолжительности жизни
+            .domain(d3.extent(countries, function (d) {
+                console.log('(d.life) = '+(d.life))
+                return d.life
+            })) //мин и макс продолжительности жизни
             .range([(height - 10) , 0]);
         var r = d3.scale.linear()
-            .domain([0, Math.sqrt(d3.max(countries, function (d) { return d.population }))]) //мин и макс продолжительности жизни
-            .range([0, 20]);
+            .domain([0, Math.sqrt(d3.max(countries, function (d) {
+                return d.population
+            }))]) //мин и макс продолжительности жизни
+            // .range([0, 20]);
+            .range([0, 15]);
+
+
 
         // добавляем заголовок
         svg.append("text")
@@ -78,18 +87,38 @@ d3.csv(
 
             // animation
             .on("mouseover", function(d) {
+
                 d3.select(this)
                     .select('.point__circle')
                     .transition()
                     .duration(500)
                     .attr('fill', '#ffffff')
                     .style('cursor', 'pointer');
+
                 d3.select(".tooltip")
                     .style('opacity', '1')
                     .style('padding', '0 5px 0 5px')
-                    .style('top', ''+y(d.life)  + 'px')
-                    // .style('left', ''+x(d.kids) - ( r(Math.sqrt(d.population)) / 2 ) + 'px')
-                    .style('left', ''+x(d.kids) + 'px')
+                    .style('top', ''+ ( y(d.life) + (50) - (r(Math.sqrt(d.population))) - 8 - 36  ) + 'px')
+                    /*
+                        where: 50 ==> {
+                            value margin.top
+                        }
+                        where: 36 ==> {
+                            height tooltip: 36px;
+                        }
+                        where: 8 ==> {
+                            value .tooltip:before border height + 2px;
+                        }
+                    */
+                    .style('left', ''+ ( x(d.kids) - 5 + 10 ) + 'px')
+                    /*
+                        where: 5 ==> {
+                            (padding left + padding right) / 2
+                        }
+                         where: 10 ==> {
+                            changed value with .tooltip: width: 40px;
+                         }
+                    */
                     .append('span').attr('class', 'tooltip__text')
                     .html(Math.ceil(d.population / 1000000) + ' m')
 
@@ -101,11 +130,10 @@ d3.csv(
                     .duration(500)
                     .attr('fill', '#f8bd4f')
                     .style('cursor', 'default');
+
                 d3.select(".tooltip")
                     .style('opacity', '0')
-                    .style('top', ''+y(d.life)  + 'px')
-                    .style('left', ''+x(d.kids) - ( r(Math.sqrt(d.population)) / 2 ) + 'px')
-                    .style('padding', '0')
+                    .style('padding', '0 5px 0 5px')
                     .select('.tooltip__text')
                     .remove()
             });
